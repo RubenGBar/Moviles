@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
@@ -171,4 +169,3 @@ fun divide(factor1: String, factor2: String): String {
 
     return resultado.toString()
 }
-
