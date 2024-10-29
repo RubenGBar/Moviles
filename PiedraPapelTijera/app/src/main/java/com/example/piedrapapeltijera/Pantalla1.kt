@@ -71,8 +71,8 @@ fun pantalla1(navController: NavHostController) {
                 Image(
                     painter = when(jugadaJugador){
                         1 -> piedra
-                        2 -> papel
-                        3 -> tijera
+                        2 -> tijera
+                        3 -> papel
                         else -> interrogacion
                     },
                     contentDescription = null,
@@ -89,8 +89,8 @@ fun pantalla1(navController: NavHostController) {
                 Image(
                     painter = when(jugadaPc){
                         1 -> piedra
-                        2 -> papel
-                        3 -> tijera
+                        2 -> tijera
+                        3 -> papel
                         else -> interrogacion
                     },
                     contentDescription = null,
