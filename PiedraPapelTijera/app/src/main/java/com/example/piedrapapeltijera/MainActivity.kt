@@ -19,10 +19,10 @@ class MainActivity : ComponentActivity() {
                 startDestination = "pantalla1"
             ) {
                 composable(route="Pantalla1") { pantalla1(navController) }
-                composable("pantalla2/{valor}") { backStackEntry ->
-                    pantalla2(
+                composable("PantallaGanador/{ganador}") { backStackEntry ->
+                    victoria(
                         navController,
-                        valor = backStackEntry.arguments?.getString("valor")
+                        backStackEntry.arguments?.getString("ganador")
                     )
                 }
             }

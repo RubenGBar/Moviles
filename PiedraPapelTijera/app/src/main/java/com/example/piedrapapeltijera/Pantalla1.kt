@@ -1,5 +1,6 @@
 package com.example.piedrapapeltijera
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,13 +30,19 @@ import androidx.navigation.NavHostController
 @Composable
 fun pantalla1(navController: NavHostController) {
 
-    var valor by rememberSaveable { mutableStateOf("") }
     val acero = painterResource(R.drawable.acerogo)
     val planta = painterResource(R.drawable.plantago)
     val roca = painterResource(R.drawable.rocago)
     val interrogacion = painterResource(R.drawable.unkowquestion)
-    val puntPc by rememberSaveable { mutableStateOf(0) }
-    val puntJu by rememberSaveable { mutableStateOf(0) }
+    var puntPc by rememberSaveable { mutableStateOf(0) }
+    var puntJu by rememberSaveable { mutableStateOf(0) }
+    var jugadaPc by rememberSaveable { mutableStateOf(0) }
+    var jugadaJugador by rememberSaveable { mutableStateOf(0) }
+    val tijera = painterResource(R.drawable.scizor)
+    val piedra = painterResource(R.drawable.realgeodude)
+    val papel = painterResource(R.drawable.kartana)
+    val contexto = LocalContext.current
+    var ganador by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -61,8 +69,16 @@ fun pantalla1(navController: NavHostController) {
             ) {
                 Text("J1")
                 Image(
-                    painter = interrogacion,
-                    contentDescription = null
+                    painter = when(jugadaJugador){
+                        1 -> piedra
+                        2 -> papel
+                        3 -> tijera
+                        else -> interrogacion
+                    },
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp)
                 )
             }
             Column (
@@ -71,8 +87,16 @@ fun pantalla1(navController: NavHostController) {
             ) {
                 Text("PC")
                 Image(
-                    painter = interrogacion,
-                    contentDescription = null
+                    painter = when(jugadaPc){
+                        1 -> piedra
+                        2 -> papel
+                        3 -> tijera
+                        else -> interrogacion
+                    },
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp)
                 )
             }
         }
@@ -85,8 +109,27 @@ fun pantalla1(navController: NavHostController) {
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = {
-                    valor = "piedra"
-                    navController.navigate("pantalla2/${valor}")
+                    jugadaJugador = 1
+                    jugadaPc = CalculaPc()
+                    ganador = ganador(jugadaJugador, jugadaPc)
+
+                    if(ganador.equals("PC") || ganador.equals("Jugador")){
+                        Toast.makeText(contexto,"Ha ganado el $ganador", Toast.LENGTH_LONG).show()
+                    }else {
+                        Toast.makeText(contexto,"No ha ganado $ganador", Toast.LENGTH_LONG).show()
+                    }
+
+                    if(ganador.equals("PC")){
+                        puntPc += 1
+                    }else if(ganador.equals("Jugador")){
+                        puntJu += 1
+                    }
+
+                    if(puntJu >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }else if(puntPc >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }
                 },
                 content = {
                     // Specify the icon using the icon parameter
@@ -99,8 +142,27 @@ fun pantalla1(navController: NavHostController) {
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = {
-                    valor = "tijera"
-                    navController.navigate("pantalla2/${valor}")
+                    jugadaJugador = 2
+                    jugadaPc = CalculaPc()
+                    ganador = ganador(jugadaJugador, jugadaPc)
+
+                    if(ganador.equals("PC") || ganador.equals("Jugador")){
+                        Toast.makeText(contexto,"Ha ganado el $ganador", Toast.LENGTH_LONG).show()
+                    }else {
+                        Toast.makeText(contexto,"No ha ganado $ganador", Toast.LENGTH_LONG).show()
+                    }
+
+                    if(ganador.equals("PC")){
+                        puntPc += 1
+                    }else if(ganador.equals("Jugador")){
+                        puntJu += 1
+                    }
+
+                    if(puntJu >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }else if(puntPc >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }
                 },
                 content = {
                     // Specify the icon using the icon parameter
@@ -113,8 +175,27 @@ fun pantalla1(navController: NavHostController) {
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = {
-                    valor = "papel"
-                    navController.navigate("pantalla2/${valor}")
+                    jugadaJugador = 3
+                    jugadaPc = CalculaPc()
+                    ganador = ganador(jugadaJugador, jugadaPc)
+
+                    if(ganador.equals("PC") || ganador.equals("Jugador")){
+                        Toast.makeText(contexto,"Ha ganado el $ganador", Toast.LENGTH_LONG).show()
+                    }else {
+                        Toast.makeText(contexto,"No ha ganado $ganador", Toast.LENGTH_LONG).show()
+                    }
+
+                    if(ganador.equals("PC")){
+                        puntPc += 1
+                    }else if(ganador.equals("Jugador")){
+                        puntJu += 1
+                    }
+
+                    if(puntJu >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }else if(puntPc >= 3){
+                        navController.navigate("PantallaGanador/${ganador}")
+                    }
                 },
                 content = {
                     // Specify the icon using the icon parameter
@@ -127,4 +208,28 @@ fun pantalla1(navController: NavHostController) {
 
     }
 
+}
+
+fun CalculaPc(): Int {
+    val random1 = (1..3).shuffled().last()
+    return random1
+}
+
+fun ganador(jugadaJ: Int, jugadaPc: Int): String {
+
+    var ganador  = ""
+
+    if (jugadaJ == 1 && jugadaPc == 2 ||
+        jugadaJ == 2 && jugadaPc == 3 ||
+        jugadaJ == 3 && jugadaPc == 1){
+        ganador = "PC"
+    }else if (jugadaJ == 2 && jugadaPc == 1 ||
+        jugadaJ == 3 && jugadaPc == 2 ||
+        jugadaJ == 1 && jugadaPc == 3){
+        ganador = "Jugador"
+    }else {
+        ganador = "Nadie"
+    }
+
+    return ganador
 }
