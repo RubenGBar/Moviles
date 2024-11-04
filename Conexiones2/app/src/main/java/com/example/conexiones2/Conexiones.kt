@@ -1,4 +1,4 @@
-package com.example.comprobacionconexion
+package com.example.conexiones2
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -6,10 +6,6 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,23 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            conexiones()
-        }
-    }
-}
 
 @Composable
-fun conexiones() {
+fun compruebaConexion() {
     val context: Context = LocalContext.current.applicationContext
     val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
     val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
