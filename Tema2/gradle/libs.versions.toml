@@ -30,6 +30,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 #ROOM
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
