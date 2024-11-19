@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -46,73 +49,82 @@ fun nuevaTarea(coroutineScope: CoroutineScope, listaTareas: SnapshotStateList<Co
     var telefono by remember { mutableStateOf("") }
     var numFoto = elegirFoto()
 
-    Row (
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Añadir contacto",
-            fontSize = 25.sp
-        )
-    }
+    Column (
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    )
+    {
 
-    Spacer(Modifier.height(5.dp))
-
-    Row (
-        horizontalArrangement = Arrangement.Center
-    ) {
-        TextField(
-            value = nombre,
-            onValueChange = {
-                nombre = it
-            },
-            label = {
-                Text(text = "Nombre")
-            }
-        )
-    }
-
-    Row (
-        horizontalArrangement = Arrangement.Center
-    ) {
-        TextField(
-            value = telefono,
-            onValueChange = { telefono = it },
-            label = {
-                Text("Telefono")
-            }
-        )
-    }
-
-    Spacer(Modifier.height(5.dp))
-
-    Row (
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = {
-                var contacto = ContactoEntity()
-                contacto.nombre = nombre
-                contacto.telefono = telefono.toInt()
-                contacto.imagen = when(numFoto) {
-                    1 -> "corvi"
-                    2 -> "hkmeme"
-                    3 -> "isaac"
-                    4 -> "mujerusu"
-                    5 -> "pedropixelado"
-                    else -> "unkow"
-                }
-                coroutineScope.launch {
-                    database.ContactoDao().insertar(contacto)
-                    listaTareas.add(contacto)
-                    nombre = ""
-                    telefono = ""
-                    numFoto = 0
-                }
-
-            }
+        Row (
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text("Añadir")
+            Text(
+                text = "Añadir contacto",
+                fontSize = 25.sp
+            )
         }
+
+        Spacer(Modifier.height(5.dp))
+
+        Row (
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextField(
+                value = nombre,
+                onValueChange = {
+                    nombre = it
+                },
+                label = {
+                    Text(text = "Nombre")
+                }
+            )
+        }
+
+        Row (
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextField(
+                value = telefono,
+                onValueChange = { telefono = it },
+                label = {
+                    Text("Telefono")
+                }
+            )
+        }
+
+        Spacer(Modifier.height(5.dp))
+
+        Row (
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    var contacto = ContactoEntity()
+                    contacto.nombre = nombre
+                    contacto.telefono = telefono.toInt()
+                    contacto.imagen = when(numFoto) {
+                        1 -> "corvi"
+                        2 -> "hkmeme"
+                        3 -> "isaac"
+                        4 -> "mujerusu"
+                        5 -> "pedropixelado"
+                        else -> "unkow"
+                    }
+                    coroutineScope.launch {
+                        database.ContactoDao().insertar(contacto)
+                        listaTareas.add(contacto)
+                        nombre = ""
+                        telefono = ""
+                        numFoto = 0
+                    }
+
+                }
+            ) {
+                Text("Añadir")
+            }
+        }
+
     }
 
 }
@@ -156,18 +168,26 @@ fun aplicacion(navController: NavHostController, usuario: String?) {
         listaTareas.addAll(database.ContactoDao().getAll())
     }
     Column (
-        Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+        Modifier
+            .fillMaxWidth()
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
     ) {
         Row (
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
         ) {
             Text(
                 text = "Bienvenido $usuario",
                 fontSize = 40.sp
             )
+
+            Spacer(Modifier.height(15.dp))
+
         }
-        Spacer(Modifier.height(50.dp))
         nuevaTarea(coroutineScope, listaTareas)
         lista(listaTareas, coroutineScope)
 

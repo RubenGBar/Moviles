@@ -50,7 +50,6 @@ fun bienvenida(navController: NavHostController) {
                 onValueChange = { usuario = it },
                 label = { Text("Usuario") },
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(bottom = 16.dp, top = 16.dp)
             )
 
