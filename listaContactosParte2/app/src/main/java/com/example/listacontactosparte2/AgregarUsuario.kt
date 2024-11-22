@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun lista(listaContactos: List<ContactoEntity>, coroutineScope: CoroutineScope){
-    LazyColumn {
+    LazyColumn(modifier = Modifier.padding(bottom = 50.dp)) {
         items(listaContactos){contacto ->
             filaTarea(contacto, coroutineScope)
         }
@@ -131,7 +131,7 @@ fun nuevaTarea(coroutineScope: CoroutineScope, listaTareas: SnapshotStateList<Co
 
 @Composable
 fun filaTarea(contacto: ContactoEntity, coroutineScope: CoroutineScope){
-    Row {
+    Row(modifier = Modifier.padding(start = 10.dp, bottom = 10.dp)) {
         Column {
             Image(
                 painter = when(contacto.imagen){
