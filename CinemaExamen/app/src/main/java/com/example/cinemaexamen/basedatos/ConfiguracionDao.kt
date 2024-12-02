@@ -17,8 +17,8 @@ interface ConfiguracionDao {
     @Query("Select * From tConfiguracion")
     suspend fun getAllConfiguraciones():List<ConfiguracionEntity>
 
-    @Query("Select * FROM tConfiguracion WHERE id = :idConfiguracion")
-    suspend fun  getConfiguracion(idConfiguracion: Long): ConfiguracionEntity?
+    @Query("Select * FROM tConfiguracion WHERE id = 1")
+    suspend fun  getConfiguracion(): ConfiguracionEntity?
 
     @Query("SELECT id FROM tConfiguracion ORDER BY id DESC LIMIT 1")
     suspend fun getLastConfiguracion() : Long

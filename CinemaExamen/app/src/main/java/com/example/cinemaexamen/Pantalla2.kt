@@ -1,6 +1,7 @@
 package com.example.cinemaexamen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,30 +32,13 @@ import com.example.cinemaexamen.basedatos.ClienteEntity
 import com.example.cinemaexamen.basedatos.ConfiguracionEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 @Composable
-fun lista(navController: NavHostController, idConfig: String?) {
+fun lista(navController: NavHostController) {
 
-    val coroutineScope = rememberCoroutineScope()
     var configuracion by remember { mutableStateOf(ConfiguracionEntity(0, 0, 0, 0f)) }
     var enabled by remember { mutableStateOf(true) }
-    var mensaje by remember { mutableStateOf("Esperando inicio...") } // Estado para el mensaje
-
-    LaunchedEffect(enabled) {
-        var numClientes = 0
-        if (enabled) {
-            mensaje = "Insertando clientes, por favor espere..."
-            while (numClientes < 100) {
-                delay(1000)
-                numClientes += entraCliente(configuracion.numSala)
-                mensaje = "Se han insertado $numClientes clientes"
-            }
-            mensaje = "Inserción completada: $numClientes clientes."
-        } else {
-            enabled = false
-        }
-    }
+    var mensaje by remember { mutableStateOf("Esperando inicio...") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,21 +47,36 @@ fun lista(navController: NavHostController, idConfig: String?) {
         Text("Salas")
         LaunchedEffect(Unit) {
             MainActivity.database.ClienteDao().deleteClientes()
-            configuracion = MainActivity.database.ConfiguracionDao().getConfiguracion(idConfig?.toLong() ?: 0)!!
+            configuracion = MainActivity.database.ConfiguracionDao().getConfiguracion()!!
         }
-        salas(configuracion, coroutineScope)
+        salas(configuracion, MainActivity.coroutine, navController)
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(mensaje) // Muestra el mensaje actual
     }
+
+    LaunchedEffect(enabled) {
+        var numClientes = 0
+        if (enabled) {
+            mensaje = "Insertando clientes, por favor espere..."
+            while (numClientes < 100) {
+                delay(100)
+                numClientes += entraCliente(configuracion.numSala, configuracion)
+                mensaje = "Se han insertado $numClientes clientes"
+            }
+            mensaje = "Inserción completada: $numClientes clientes."
+        } else {
+            enabled = false
+        }
+    }
 }
 
 @Composable
-fun salas(configuracion: ConfiguracionEntity?, coroutineScope: CoroutineScope) {
+fun salas(configuracion: ConfiguracionEntity?, coroutineScope: CoroutineScope, navController: NavHostController) {
     LazyColumn {
         if (configuracion != null) {
             items(configuracion.numSala) { index ->
-                SalaItem(index = index + 1, configuracion, coroutineScope)
+                SalaItem(index = index + 1, configuracion, coroutineScope, navController)
             }
         }
     }
@@ -85,7 +84,7 @@ fun salas(configuracion: ConfiguracionEntity?, coroutineScope: CoroutineScope) {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SalaItem(index: Int, conf: ConfiguracionEntity, coroutineScope: CoroutineScope) {
+fun SalaItem(index: Int, conf: ConfiguracionEntity, coroutineScope: CoroutineScope, navController: NavHostController) {
     var color: Color by remember { mutableStateOf(Color.Blue) }
     var enabled by remember { mutableStateOf(true) }
     LaunchedEffect(index, conf) {
@@ -98,7 +97,7 @@ fun SalaItem(index: Int, conf: ConfiguracionEntity, coroutineScope: CoroutineSco
                 porCiento >= 66 -> Color.Yellow
                 else -> Color.Green
             }
-            delay(1000)
+            delay(100)
         }
     }
     Column(
@@ -119,7 +118,11 @@ fun SalaItem(index: Int, conf: ConfiguracionEntity, coroutineScope: CoroutineSco
             )
         ) {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        navController.navigate("pantalla4/${index}")
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -132,11 +135,15 @@ fun SalaItem(index: Int, conf: ConfiguracionEntity, coroutineScope: CoroutineSco
     }
 }
 
-suspend fun entraCliente(numSalas: Int): Int {
-    val numClientes = Random.nextInt(1, 3)
+suspend fun entraCliente(numSalas: Int, configuracion: ConfiguracionEntity): Int {
+    val numClientes = Random.nextInt(1, 6)
     for (i in 1..numClientes) {
-        val salaElegida = Random.nextInt(1, numSalas + 1)
-        val cliente = ClienteEntity(salaElegida = salaElegida, palomitas = 0)
+        var salaElegida = Random.nextInt(1, numSalas + 1)
+        var numero = MainActivity.database.ClienteDao().getClientesEnSala(salaElegida)
+        if (numero>=configuracion.numAsientos) {
+            salaElegida=0
+        }
+        val cliente = ClienteEntity(salaElegida = salaElegida, palomitas = (0..1).random())
         MainActivity.database.ClienteDao().insertar(cliente)
     }
     return numClientes

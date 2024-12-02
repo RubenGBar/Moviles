@@ -36,7 +36,6 @@ fun inicio(navController: NavHostController) {
     var numSalas by remember { mutableStateOf("0") }
     var numAsientos by remember { mutableStateOf("0") }
     var precioPalomitas by remember { mutableStateOf("0") }
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -99,13 +98,12 @@ fun inicio(navController: NavHostController) {
                     precioPalomitas = precioPalomitas.toFloat()
                 )
 
-                coroutineScope.launch {
+                MainActivity.coroutine.launch {
                     MainActivity.database.ConfiguracionDao().insertar(configuracion)
                 }
 
-                coroutineScope.launch {
-                    var ultimaId = MainActivity.database.ConfiguracionDao().getLastConfiguracion()
-                    navController.navigate("Pantalla2/${ultimaId.toString()}")
+                MainActivity.coroutine.launch {
+                    navController.navigate("Pantalla2")
                 }
             }
         ) {
