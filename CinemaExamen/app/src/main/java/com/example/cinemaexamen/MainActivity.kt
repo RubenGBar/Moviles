@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("Pantalla3")
                                 }
                             ) {
-                                Text("Asistencia")
+                                Text("Asistencia    ")
                             }
                         }
                     }
